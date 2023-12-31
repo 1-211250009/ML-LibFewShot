@@ -7,3 +7,4 @@ classifier:
       test_iter: 10
     feat_dim: 640
     use_unicorn: true
+    temperature: 32
