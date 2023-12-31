@@ -36,7 +36,7 @@ def inner_train_step(model, support_data, args):
         updated_params, acc_gradients = update_params(loss, updated_params, acc_gradients, step_size=args.gd_lr, first_order=True)
     return updated_params, acc_gradients
 
-class UnicornMAML(MetaModel):
+class UNICORN_MAML(MetaModel):
     def __init__(self, args, init_type="normal"):
         super().__init__(init_type, ModelType.META, args=args)
         self.args = args
