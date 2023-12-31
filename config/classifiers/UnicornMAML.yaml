@@ -1,0 +1,9 @@
+classifier:
+  name: UNICORN-MAML
+  kwargs:
+    inner_param:
+      lr: 1e-2
+      train_iter: 5
+      test_iter: 10
+    feat_dim: 640
+    use_unicorn: true
