@@ -4,85 +4,34 @@ includes:
   - headers/misc.yaml
   - headers/model.yaml
   - headers/optimizer.yaml
-  - backbones/resnet12.yaml
-  - classifiers/UnicornMAML.yaml
-
-data_root: ./data/fewshot/miniImageNet--ravi
-image_size: 84
-use_memory: False
-augment: True
-augment_times: 1
-augment_times_query: 1
-
-backbone:
-    name: resnet12
-    kwargs:
-        is_flatten: False
-
-# 模型的分类器，这里为Unicorn-MAML
-classifier:
-    name: UnicornMAML
-    kwargs:
-        # 每个类别的样本数，一般为3
-        n_k: 3
-        # 学习率，一般为0.01
-        lr: 0.05
-        # 内部循环的步数，一般为5
-        inner_steps: 15
-        # 是否使用第二阶段的优化，一般为True
-        second_order: False
-        # 是否使用梯度裁剪，一般为False
-        grad_clip: False
-        # 是否使用正则化，一般为False
-        regularization: False
-        # 正则化的系数，一般为0.001
-        reg_weight: 0.001
-
-epoch: 100
-test_epoch: 5
-
-pretrain_path: ./miniimagenet/Res12-pre.pth
-resume: False
 
 way_num: 5
 shot_num: 1
 query_num: 15
-test_way: ~
-test_shot: 1
-test_query: ~
-episode_size: 1
-# batch_size只在pre-train中起效
-batch_size: 128
-train_episode: 10000
-test_episode: 1000
-temperature: 0.5
+episode_size: 2
+train_episode: 2000
+test_episode: 600
+
+device_ids: 5
+n_gpu: 1
+epoch: 100
 
 optimizer:
-    name: Adam
-    kwargs:
-        lr: 0.001
-    other:
-        lr_mul: 10
-        emb_func: 0.01
-        # 分类器的学习率，一般和优化器的学习率相同
-        unicorn_maml_layer: 0.01
-
-lr_scheduler:
-  name: StepLR
+  name: Adam
   kwargs:
-    gamma: 0.1
-    step_size: 20
+    lr: 1e-3
+  other: ~
 
-device_ids: 0
-n_gpu: 1
-seed: 0
-deterministic: False
+backbone:
+  name: resnet12
+  kwargs: ~
 
-log_name: ~
-log_level: info
-log_interval: 100
-result_root: ./results
-save_interval: 10
-save_part:
-    - emb_func
-    - unicorn_maml_layer
+classifier:
+  name: UNICORN-MAML
+  kwargs:
+    inner_param:
+      lr: 1e-2
+      train_iter: 5
+      test_iter: 10
+    feat_dim: 640
+    use_unicorn: true
