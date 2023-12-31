@@ -1,4 +1,6 @@
 from .meta_model import MetaModel
+from core.model.abstract_model import AbstractModel
+from core.utils import ModelType
 from abc import abstractmethod
 from collections import OrderedDict
 import torch
@@ -34,7 +36,7 @@ def inner_train_step(model, support_data, args):
         updated_params, acc_gradients = update_params(loss, updated_params, acc_gradients, step_size=args.gd_lr, first_order=True)
     return updated_params, acc_gradients
 
-class MAML(MetaModel):
+class UnicornMAML(MetaModel):
     def __init__(self, args, init_type="normal"):
         super().__init__(init_type, ModelType.META, args=args)
         self.args = args
@@ -69,8 +71,8 @@ class MAML(MetaModel):
         return loss
 
     def set_forward_adaptation(self, data_shot, data_query):
-        self.encoder.fc.weight.data = self.fcone.weight.data.repeat(self.args.way, 1)
-        self.encoder.fc.bias.data = self.fcone.bias.data.repeat(self.args.way)
+        self.fcone.weight.data = torch.randn_like(self.fcone.weight.data) # use a random shared classifier initialization
+        self.fcone.bias.data = torch.randn_like(self.fcone.bias.data)
         self.train()
         updated_params, acc_gradients = inner_train_step(self.encoder, data_shot, self.args)
         updated_params['fc.weight'] = self.fcone.weight.repeat(self.args.way, 1) - self.args.gd_lr * acc_gradients[0]
