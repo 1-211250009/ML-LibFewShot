@@ -13,7 +13,7 @@ episode_size: 2
 train_episode: 2000
 test_episode: 600
 
-device_ids: 5
+device_ids: 0
 n_gpu: 1
 epoch: 100
 
@@ -26,6 +26,12 @@ optimizer:
 backbone:
   name: resnet12
   kwargs: ~
+
+lr_scheduler:
+  name: StepLR
+  kwargs:
+    gamma: 0.5
+    step_size: 10
 
 classifier:
   name: UNICORN-MAML
