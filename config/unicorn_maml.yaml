@@ -43,7 +43,7 @@ lr_scheduler:
     step_size: 10
 
 classifier:
-  name: UNICORN-MAML
+  name: UNICORN_MAML
   kwargs:
     inner_param:
       lr: 1e-2
